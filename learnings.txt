@@ -1,0 +1,50 @@
+Project Learnings: Ekantipur Scraper
+
+1. Handling Timeouts (Networkidle vs. Domcontentloaded):
+   Initially, I used `wait_until="networkidle"`, but the script crashed
+   with a 30s TimeoutError. This happened because news sites have constant 
+   background network activity (ads/analytics). I switched to `wait_until="domcontentloaded"`
+   which waits only for the HTML structure to be ready, making the script
+   stable and much faster.
+
+2. Understanding and Handling Lazy Loading: 
+   I learned that modern websites optimize performance by deferring image 
+   loading until the user scrolls, a technique known as "Lazy Loading." 
+   In the DOM, this is often implemented by storing the high-quality image 
+   URL in a data-src attribute instead of the standard src. I updated my 
+   scraper's logic to prioritize checking data-src first, ensuring I captured 
+   the actual image content even if the browser hadn't fully rendered it yet.
+
+3. Dealing with Developer Typos:
+   While inspecting the Cartoon section, I couldn't select the wrapper 
+   using logical class names. Upon close inspection, I discovered a typo 
+   in the production code: `.catroon-wrap` (spelled 'tr' instead of 'rt'). 
+   This taught me to trust the Inspector over my own spelling assumptions.
+
+4. Handling Nested Elements (Child Selectors): 
+   Upon close inspection of the DOM, I found that the .cartoon-author 
+   div was nested inside the main .catroon-wrap container, acting as a
+   direct child alongside the image. While I could have used a specific 
+   path like wrap.query_selector(".cartoon-author"), I learned that using 
+   a global page selector for the unique class name was a simpler and equally 
+   effective way to retrieve the data.
+   
+5. Visual Translation vs. Source Code:
+   I was confused when the browser showed the cartoon title in 
+   English ("That's amazing, bro") but the scraper returned Nepali 
+   ("गजब छ बा"). I realized the browser's auto-translate feature 
+   modifies the DOM visually, but the scraper sees the raw, 
+   original source code.
+
+6. Efficient Looping (The 'Break' Statement):
+   The `.listLayout .row` selector can appear multiple times 
+   on the page (for Music, Trending, etc.). To ensure I only 
+   got the specific Entertainment news, I added a category 
+   validation check and a `break` statement to stop the loop 
+   immediately after processing the first main shelf.
+
+7. Implicit vs. Explicit Authors:
+   The cartoon section doesn't always have a standard `.author` 
+   tag like the news section. I had to create specific logic 
+   to target the `.cartoon-author` class, ensuring the JSON output 
+   remains consistent across different content types.

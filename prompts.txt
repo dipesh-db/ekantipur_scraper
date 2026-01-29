@@ -1,0 +1,19 @@
+Write a Python script using sync_playwright to scrape news from 'https://ekantipur.com/entertainment'. It should navigate to the page, wait for the '.listLayout .row' selector. Iterate through the rows to find the category name (from '.cat_name') and extract the top 5 articles (title, author, image) from that section. Handle lazy loading for images (data-src).
+
+Write a Python script using playwright.sync_api to scrape ekantipur.com.
+
+Task 1: Entertainment News
+Navigate to https://ekantipur.com/entertainment.
+Wait for the selector .listLayout .row.
+Use a standard Python loop (do not use eval_on_selector) to iterate through the rows.
+Inside the first row only, extract the Category Name (.cat_name) and the top 5 articles (article.normal).
+For each article, get the Title (h2), Author (.author), and Image.
+Note: Handle lazy loading for images by checking data-src first, then src.
+
+Task 2: Cartoon of the Day
+Navigate to https://ekantipur.com/cartoon.
+Wait for the class .catroon-wrap (Note: This class has a typo 'tr' instead of 'rt', use it exactly as written).
+Extract the Image Src and use the Image Alt text as the Title.
+Extract the Author from the neighbor element .cartoon-author.
+Output: Save all data (Entertainment + Cartoon) into a single valid JSON file named output.json with ensure_ascii=False to support Nepali text.
+
